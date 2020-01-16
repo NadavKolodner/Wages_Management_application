@@ -1,0 +1,62 @@
+<header>
+  <div class="container">
+    <a href="#" class="logo">Organizational Finance Manager</a>
+    <nav>
+      <ul>
+        <!--<li><a href="#" routerLink="/">Home</a></li>-->
+        <li><a (click)="companyDisplay()">Refresh Charts</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+
+<!-- <h1>Welcome!</h1>
+
+<div class="play-container">
+  <p>You've clicked <span (click)="countClick()">this</span> {{ clickCounter }} times.</p>
+</div>
+
+<div class="play-container">
+  <input type="text" [(ngModel)]="name">
+  <br>
+  <strong>You said: </strong> {{name}}
+</div> 
+
+<div class="play-container" [ngClass]="setClasses()">-->
+
+<!-- This allows you to change CSS props with an if statement from inside a div
+[style.background-color]="clickCounter > 4 ? 'grey' : 'lightgrey'" 
+
+    This allows you to change multiple css props in a div
+    [ngStyle]="{
+    'background-color': clickCounter > 4 ? 'grey' : 'lightgrey',
+    'border': clickCounter > 4 ? '4px solid black' : 'none'}"
+
+
+    This allows you to activate CSS props in the attacked CSS file
+    [class.active]="clickCounter > 4"
+-->
+
+
+    <ng-template [ngIf]="isHQ > 0" [ngIfElse]="none">
+        <div class="edit">
+          <button (click)="editHandlerHQ(1)">Create Company</button>
+          <button (click)="editHandlerHQ(2)">Edit a Company's Employees</button>
+          <button (click)="editHandlerHQ(3)">Delete a Company</button>
+          <a (click)="HQDisplay()">Refresh Charts</a>
+        </div>
+    </ng-template>
+    <ng-template #none>
+        <div class="edit">
+          <button (click)="editHandlerCompany(1)">Edit Salary</button>
+          <button (click)="editHandlerCompany(2)">Add Employee</button>
+          <button (click)="editHandlerCompany(3)">Delete Salary</button>
+        </div>
+    </ng-template>
+
+<!-- <div><button (click)="companyDisplay()">Refresh Chart</button></div> -->
+
+
+<div [innerHtml]="htmlToAdd"></div>

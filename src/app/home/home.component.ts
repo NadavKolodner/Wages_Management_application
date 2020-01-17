@@ -14,13 +14,16 @@ export class HomeComponent implements OnInit {
   isHQ: number = 0;
   companyKey: string;
   tableCode: string;
+  keyStore = []
+  storedKeyStore;
 
   ngOnInit() {
+    if (localStorage.getItem("keyStore") != null) {
+      this.storedKeyStore = JSON.parse(localStorage.getItem("keyStore"));
+    }
     var tempKey = prompt("Please enter your company name", "Company Name");
     this.companyKey = tempKey.toLowerCase();
     if (this.companyKey == "headquarters"){
-      //console.log("sucess");
-      //console.log(JSON.parse(localStorage.getItem("testcorp")))
       this.HQDisplay();
       this.isHQ = 10;
     }else if (this.companyKey in localStorage){
@@ -33,18 +36,9 @@ export class HomeComponent implements OnInit {
 
 companyDisplay(){
   var key = this.companyKey;
-/*     console.log("cake")
-    console.log(JSON.parse(localStorage.getItem(key)))
     let employList = JSON.parse(localStorage.getItem(key))
-    const username = employList.foo.position;
-    console.log(username)
-    employList.foo.salary = "30000"; //change fname to Clyde
-    localStorage.setItem(key, JSON.stringify(employList));
-    console.log(localStorage.getItem(key)) */
-    let employList = JSON.parse(localStorage.getItem(key))
-    console.log(employList)
     let headers = ["Name", "Position", "Salary"];
-    let tableCode: string = `
+  let tableCode: string = `
                                 <thead>
                                   <tr>
                                     <th>Employee #</th>
@@ -90,15 +84,13 @@ companyDisplay(){
       var position = prompt("Please enter the position of the employee you would like to add", "");
       var salary = prompt("Please enter the new salary of the employee you would like to add", "0");
       var key = this.companyKey;
+      var company = key
       let employList = JSON.parse(localStorage.getItem(key))
-      //let newEmp = "name:"+newName+", position:"+newPos+", salary:"+newSal
-      //let newNewEmp = {newEmp}
-      var thirdArr = employList.concat({name,position,salary})
+      var thirdArr = employList.concat({name,company,position,salary})
       localStorage.setItem(key, JSON.stringify(thirdArr));
     }
     if (cords == 3){//Delete
       var key = this.companyKey;
-      var arrNumEmployees = this.numberOfEmployees - 1;
       let employList = JSON.parse(localStorage.getItem(key))
       var employeeNum = prompt("Please enter the number of the employee you would like to delete", "0");
       employList.splice(employeeNum, 1);
@@ -108,27 +100,21 @@ companyDisplay(){
   }
 
   HQDisplay(){
-    let listArray = []
+    var arib = []
     this.isHQ = 10;
-    for (var key in localStorage) {
-      if (localStorage.hasOwnProperty(key)){
-        let employList = localStorage[key]
-        console.log(employList)
-        var employListString = employList.toString();
-        listArray.push("<b>" + key + "</b> " + employListString + " ,");
-        
-
+    var storedKeyStore = JSON.parse(localStorage.getItem("keyStore"));
+    this.htmlToAdd = storedKeyStore;
+    if (localStorage.getItem("keyStore") != null) {
+    for (let i = 0; i < storedKeyStore.length; i++) {
+      var test = JSON.parse(localStorage.getItem(storedKeyStore[i]))
+      for (let g = 0; g < test.length; g++){
+        arib.push(test[g])
       }
     }
-    this.htmlToAdd = listArray.toString();
-    console.log(this.htmlToAdd)
- /*  for ( var i = 0, len = localStorage.length; i < len; ++i ) {
-  console.log( localStorage.getItem( localStorage.key( i ) ) );
-  let  employList = JSON.parse(localStorage.getItem(localStorage.key(i))) 
-    let tableCode: string = `
-                                <thead>
+    let headers = ["Name", "Position", "Salary"];
+    let tableCode: string = `<thead>
                                   <tr>
-                                    <th>Employee #</th>
+                                    <th>Company</th>
                                     <th>Name</th>
                                     <th>Position</th>
                                     <th>Salary</th>
@@ -137,12 +123,12 @@ companyDisplay(){
                                 <tbody>
                                 `
     let tableEnd = `</tbody>`
-    for (var i = 0; i < employList.length; i++) {
-      var obj = employList[i];
+    for (var i = 0; i < arib.length; i++) {
+      var obj = arib[i];
       let oldTableCode = tableCode;
       let tableRowCode = `
         <tr>
-          <td>`+ i + `</td>
+          <td><b>`+ obj.company + `</b></td>
           <td>`+ obj.name + `</td>
           <td>`+ obj.position + `</td>
           <td>$`+ obj.salary + `</td>
@@ -150,9 +136,8 @@ companyDisplay(){
       tableCode = oldTableCode + tableRowCode;
       this.numberOfEmployees++
     }
-    this.htmlToAdd = tableCode + tableEnd; 
-  } */
-    
+    this.htmlToAdd = tableCode + tableEnd;
+  }
   }
 
   editHandlerHQ(cords) {
@@ -161,20 +146,26 @@ companyDisplay(){
       var name = prompt("Please enter the name of the first employee you are adding", "");
       var position = prompt("Please enter the position of the first employee you are adding", "");
       var salary = prompt("Please enter the new salary of the first employee you are adding", "0");
-      var newCompanyArray = [{name,position,salary}];
+      var company = newKey
+      var newCompanyArray = [{name,company,position,salary}];
+      this.keyStore.push(newKey)
       localStorage.setItem(newKey, JSON.stringify(newCompanyArray));
+      localStorage.setItem("keyStore", JSON.stringify(this.keyStore));
+      var storedKeyStore = JSON.parse(localStorage.getItem("keyStore"));
       this.HQDisplay();
     }
-    //Unused functionality - would not be practical to troubleshoot in my limeted time
-/*     if (cords == 2) { //Add --edit a company
+      if (cords == 2) { //Add --edit a company
       var newKey = prompt("Please enter the name of the company you would like to edit", "");
       this.companyKey = newKey.toLowerCase();
-      this.isHQ = 10;
-      this.companyDisplay;
-    } */
+      this.isHQ = 0;
+      this.companyDisplay();
+      alert(this.isHQ)
+    }
     if (cords == 3) {//Delete
       var newKey = prompt("Please enter the name of the company you would like to delete", "");
       localStorage.removeItem(newKey);
+      this.keyStore.splice(this.keyStore.indexOf(newKey), 1);
+      localStorage.setItem("keyStore", JSON.stringify(this.keyStore));
     }
 
   }

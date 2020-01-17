@@ -1,21 +1,19 @@
-
-
-table.unstyledTable {
+.unstyledTable {
   border: 1px solid #000000;
   text-align: center;
 }
 
-table.unstyledTable td,
-table.unstyledTable th {
+.unstyledTable td,
+.unstyledTable th {
   border: 1px solid #AAAAAA;
-  padding: 3px 10px;
+  padding: 4px 10px;
 }
 
-table.unstyledTable thead {
+.unstyledTable thead {
   background: #DDDDDD;
-  border-bottom: 2px solid #444444;
 }
 
-table.unstyledTable thead th {
+.unstyledTable thead th {
   font-weight: normal;
+  text-align: center;
 }
